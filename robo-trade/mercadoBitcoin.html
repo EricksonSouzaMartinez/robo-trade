@@ -1,0 +1,228 @@
+Acesso à API de Negociações
+O acesso à API de Dados é público, não é necessário criar uma conta tampouco autenticar.
+
+Estrutura das Requisições
+URL
+É necessário fazer uma chamada HTTP, método GET, para a URL https://www.mercadobitcoin.net/api/<coin>/<method>/
+
+
+Parâmetros de URL
+Dois parâmetros são obrigatórios e presentes em todas as requisições:
+
+ coin: Acrônimo da moeda digital
+Tipo: String
+Domínio de dados:
+BTC : Bitcoin
+LTC : Litecoin
+BCH : BCash
+XRP : XRP (Ripple)
+ETH : Ethereum
+
+ method: Método da API de Dados requisitado
+Tipo: String
+Domínio de dados:
+ticker : resumo de operações executadas
+orderbook : livro de negociações, ordens abertas de compra e venda
+trades : histórico de operações executadas
+
+Respostas
+As Respostas são retornadas no formato JSON.
+
+
+Exemplo de URL
+https://www.mercadobitcoin.net/api/BTC/ticker/
+Métodos da API
+ticker
+Descrição
+Retorna informações com o resumo das últimas 24 horas de negociações.
+
+Resultado
+ high: Maior preço unitário de negociação das últimas 24 horas. Tipo: Decimal
+ low: Menor preço unitário de negociação das últimas 24 horas. Tipo: Decimal
+ vol: Quantidade negociada nas últimas 24 horas. Tipo: Decimal
+ last: Preço unitário da última negociação. Tipo: Decimal
+ buy: Maior preço de oferta de compra das últimas 24 horas. Tipo: Decimal
+ sell: Menor preço de oferta de venda das últimas 24 horas. Tipo: Decimal
+ date: Data e hora da informação em Era Unix  Tipo: Inteiro
+Exemplo de chamada:
+https://www.mercadobitcoin.net/api/BTC/ticker/
+Exemplo de Retorno:
+{
+    'ticker': {
+        'high': 14481.47000000,
+        'low': 13706.00002000,
+        'vol': 443.73564488,
+        'last': 14447.01000000,
+        'buy': 14447.00100000,
+        'sell': 14447.01000000,
+        'date': 1502977646
+    }
+}
+
+orderbook
+Descrição
+Livro de ofertas é composto por duas listas: (1) uma lista com as ofertas de compras ordenadas pelo maior valor; (2) uma lista com as ofertas de venda ordenadas pelo menor valor. O livro mostra até 1000 ofertas de compra e até 1000 ofertas de venda.
+
+Uma oferta é constituída por uma ou mais ordens, sendo assim, a quantidade da oferta é o resultado da soma das quantidades das ordens de mesmo preço unitário. Caso uma oferta represente mais de uma ordem, a prioridade de execução se dá com base na data de criação da ordem, da mais antiga para a mais nova.
+
+Resultado
+
+ bids: Lista de ofertas de compras, ordenadas do maior para o menor preço. Tipo: Array
+[0]: Preço unitário da oferta de compra. Tipo: Decimal
+[1]: Quantidade da oferta de compra. Tipo: Decimal
+
+ asks: Lista de ofertas de venda, ordenadas do menor para o maior preço. Tipo: Array
+[0]: Preço unitário da oferta de venda. Tipo: Decimal
+[1]: Quantidade da oferta de venda. Tipo: Decimal
+
+Exemplo de chamada:
+https://www.mercadobitcoin.net/api/BTC/orderbook/
+Exemplo de Retorno
+{
+    "asks": [
+        [10410.00006000, 2.09190016],
+        [10420.00000000, 0.00997000],
+        [10488.99999000, 0.46634897]
+    ],
+    "bids": [
+        [10405.38258000, 0.00181000],
+        [10393.84180000, 0.08387000]
+    ]
+}
+
+trades
+Descrição
+Histórico de negociações realizadas.
+
+Resultado
+ []: Lista de negociações realizadas.
+date: Data e hora da negociação em Era Unix 
+Tipo: Decimal
+price: Preço unitário da negociação.
+Tipo: Decimal
+amount: Quantidade da negociação.
+Tipo: Decimal
+tid: Identificador da negociação.
+Tipo: Inteiro
+type: Indica a ponta executora da negociação 
+Tipo: String
+Domínio de dados:
+buy : indica ordem de compra executora
+sell : indica ordem de venda executora
+Exemplo de chamada:
+https://www.mercadobitcoin.net/api/BTC/trades/
+Parâmetros adicionais
+A chamada tradicional do histórico irá retornar as últimas 1000 negociações. Para obter dados anteriores, é necessário utilizar outros parâmetros conforme descrito e exemplificado abaixo:
+
+tid ou since: Retorna até 1000 negociações a partir do identificador da negociação informado.
+Chamadas: 
+https://www.mercadobitcoin.net/api/coin/trades/?tid=<tid>
+https://www.mercadobitcoin.net/api/coin/trades/?since=<since>
+Exemplo:
+https://www.mercadobitcoin.net/api/BTC/trades/?tid=5700
+https://www.mercadobitcoin.net/api/BTC/trades/?since=5700
+from: Retorna até 1000 negociações a partir da data informada.
+Formato: Era Unix
+Chamada: https://www.mercadobitcoin.net/api/coin/trades/<from>/
+Exemplo:
+https://www.mercadobitcoin.net/api/BTC/trades/1501871369/
+from-to: Retorna até 1000 negociações entre o intervalo de timestamp informado.
+Formato: Era Unix
+Chamada: https://www.mercadobitcoin.net/api/coin/trades/<from>/<to>/
+Exemplo:
+https://www.mercadobitcoin.net/api/BTC/trades/1501871369/1501891200/
+Exemplo de Retorno
+[
+    {
+        'date': 1502993741,
+        'price': 14086.00000000,
+        'amount': 0.03840000,
+        'tid': 797861,
+        'type': 'sell'
+    },
+    {
+        'date': 1502993741,
+        'price': 14086.00101000,
+        'amount': 0.08519000,
+        'tid': 797860,
+        'type': 'sell'
+    },
+    {
+        'date': 1502993907,
+        'price': 14200.00000000,
+        'amount': 0.01370282,
+        'tid': 797871,
+        'type': 'buy'
+    },
+    {
+        'date': 1502993898,
+        'price': 14200.00000000,
+        'amount': 0.00697183,
+        'tid': 797870,
+        'type': 'buy'
+    },
+    {
+        'date': 1502982896,
+        'price': 14320.00101000,
+        'amount': 0.02089000,
+        'tid': 796876,
+        'type': 'sell'
+    }
+]
+
+day-summary
+Descrição
+Retorna resumo diário de negociações realizadas.
+
+Resultado
+date: Data do resumo diário
+Tipo: String
+Formato: AAAA-MM-DD, exemplo: 2013-06-20
+opening: Preço unitário de abertura de negociação no dia.
+Tipo: Decimal
+closing: Preço unitário de fechamento de negociação no dia.
+Tipo: Decimal
+lowest: Menor preço unitário de negociação no dia.
+Tipo: Decimal
+highest: Maior preço unitário de negociação no dia.
+Tipo: Decimal
+volume: Volume de Reais (BRL) negociados no dia.
+Tipo: Decimal
+quantity: Quantidade da moeda digital negociada no dia.
+Tipo: Decimal
+amount: Número de negociações realizadas no dia.
+Tipo: Inteiro
+avg_price: Preço unitário médio das negociações no dia.
+Tipo: Decimal
+Parâmetros adicionais
+year, month, day: Respectivamente ano, mês e dia referente ao dia do ano requisitado.
+Chamadas: 
+https://www.mercadobitcoin.net/api/coin/day-summary/<year>/<month>/<day>/
+Exemplo:
+https://www.mercadobitcoin.net/api/BTC/day-summary/2013/6/20/
+Exemplo de Retorno
+{
+    'date': '2013-06-20',
+    'opening': 262.99999,
+    'closing': 269.0,
+    'lowest': 260.00002,
+    'highest': 269.0,
+    'volume': 7253.1336356785,
+    'quantity': 27.11390588,
+    'amount': 28,
+    'avg_price': 267.5060416518087
+}
+Glossário
+API - Conjunto de rotinas e padrões para acesso a um aplicativo ou plataforma, leia mais em: https://en.wikipedia.org/wiki/Application_programming_interface.
+
+CORS (Cross-Origin Resource Sharing) - Em termos práticos, é um recurso de segurança dos navegadores que impede um domínio de fazer requisições Ajax de um outro domínio, a não ser que seja explicitamente pelo domínio de origem da informação, leia mais em: https://en.wikipedia.org/wiki/Cross-origin_resource_sharing
+
+Domínio de dados - Conjunto de valores possíveis para um determinado campo, leia mais em: https://en.wikipedia.org/wiki/Data_domain.
+
+Era Unix - Sistema de calendário utilizado pelo sistema operacional UNIX representado por um número inteiro de até 32 bits. É útil para comunicação e cálculos em sistemas devido a sua simplicidade. Seus valores representam a quantidade de segundos a partir do dia 1 de janeiro de 1970. É um horário sem variações de fuso horário ou horário de verão, assim utiliza apenas UTC/GMT, leia mais em: https://pt.wikipedia.org/wiki/Era_Unix. Veja exemplos de código em diversas linguagens em: http://www.epochconverter.com.
+
+JSON - Formato leve para intercâmbio de dados computacionais, leia mais em: https://pt.wikipedia.org/wiki/JSON.
+
+String - Tipo de dado texto, cadeia de caracteres, leia mais em: https://en.wikipedia.org/wiki/String_(computer_science).
+
+

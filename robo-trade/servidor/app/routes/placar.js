@@ -2,9 +2,9 @@
 
 	var api = app.api.placar;
 
-	app.route('/registros/')
+	app.route('/placar/')
 		.get(api.lista);
 
-    app.route('/registros/')
+    app.route('/placar/')
         .post(api.insere);
 };
