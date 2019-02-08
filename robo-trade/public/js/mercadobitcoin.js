@@ -1,4 +1,4 @@
-
+var corpo = $(".corpo-arquivo");
 $("#comecar").click(function(){
 	setInterval(function(){
 	$.get("https://www.mercadobitcoin.net/api/BTC/ticker/", pegaDados);
@@ -7,8 +7,9 @@ $("#comecar").click(function(){
 	// $.get("https://www.mercadobitcoin.net/api/XRP/ticker/", MaiorPrecodeOferta);
 	// $.get("https://www.mercadobitcoin.net/api/ETH/ticker/", pegaDados);
 	Analise();
-	},3000);
 	SyncDados();
+	},3000);
+	
 });
 //https://www.mercadobitcoin.net/api-doc/
 
@@ -86,9 +87,9 @@ function SyncDados() {
        placar: placar
     }
 
-   console.log(dados);
+   //console.log(dados);
    $.post("http://localhost:3000/placar", dados, function () {
-   console.log("Salvou os Usuarios no servidor");
+   //console.log("Salvou os Usuarios no servidor");
       // $(".tooltip").tooltipster("open")
      // }).fail(function(){
    // $(".tooltip").tooltipster("open").tooltipster("content","Falha ao sincornizar");
@@ -99,7 +100,60 @@ function SyncDados() {
 
 function Analise() {
 	var precoUnitario = $(".last").text();
-	if (precoUnitario < 13298){
-		alert("compra");
+	if (precoUnitario < 13500){
+		//alert("compra");
+		corpo.addClass("green");
+        corpo.removeClass("red");
+        corpo.removeClass("yelloW");
+        corpo.removeClass("blue");
+        corpo.removeClass("purple");
+        corpo.removeClass("gray");
+	}
+	if (precoUnitario < 13400){
+		//alert("compra media");
+		corpo.addClass("red");
+		corpo.removeClass("green");
+		corpo.removeClass("yelloW");
+		corpo.removeClass("blue");
+		corpo.removeClass("purple");
+		corpo.removeClass("gray");
+	}
+	if (precoUnitario < 13200){
+		//alert("compra mais ou menos");
+		corpo.addClass("yelloW");
+		corpo.removeClass("red");
+		corpo.removeClass("green");
+		corpo.removeClass("blue");
+		corpo.removeClass("blue");
+		corpo.removeClass("purple");
+		corpo.removeClass("gray");
+	}
+	if (precoUnitario < 13100){
+		alert("compra mais mais ou menos");
+		corpo.addClass("blue");
+		corpo.removeClass("red");
+		corpo.removeClass("green");
+		corpo.removeClass("yelloW");
+		corpo.removeClass("purple");
+		corpo.removeClass("purple");
+		corpo.removeClass("gray");
+	}
+	if (precoUnitario < 13000){
+		//alert("compra mais");
+		corpo.addClass("purple");
+		corpo.removeClass("red");
+		corpo.removeClass("green");
+		corpo.removeClass("yelloW");
+		corpo.removeClass("blue");
+		corpo.removeClass("gray");
+	}
+	if (precoUnitario > 13750){
+		//alert("Vende");
+		corpo.addClass("gray");
+		corpo.removeClass("red");
+		corpo.removeClass("green");
+		corpo.removeClass("yelloW");
+		corpo.removeClass("blue");
+		corpo.removeClass("purple");
 	}
 }
