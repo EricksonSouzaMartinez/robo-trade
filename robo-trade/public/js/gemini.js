@@ -1,1 +1,0 @@
-// https://docs.gemini.com/rest-api/
