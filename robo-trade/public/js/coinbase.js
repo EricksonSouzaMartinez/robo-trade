@@ -1,74 +1,52 @@
-var corpo = $(".corpo-mercadobitcoin");
-$("#comecar-mercadobitcoin").click(function(){
+$("#comecar-coinbase").click(function(){
 	setInterval(function(){
-	$.get("https://www.mercadobitcoin.net/api/BTC/ticker/", pegaDadosmercadobitcoin)
+	$.get("https://api.pro.coinbase.com/products/BTC-USD/ticker", pegaDadoscoinbase)
 	.fail(function(){
     $(".dica").text("Falha de conexão");
 	 });
-	 valorinputMercadobitcoin();
-	 analisaMercadobitcoin();
-	},300);
-	SyncDados();
+	valorinput();
+	pegaDolar();
+	analisa();
+	//  SyncDados();
+	},300);	
 });
-//https://www.mercadobitcoin.net/api-doc/
 
-function pegaDadosmercadobitcoin(data) {
-	var maiorpreco = $(".high");
-	var menorPreco = $(".low");
-	var quantidadeNegociada = $(".vol");
-	var precoUnitario = $(".last");
-	var maiorPrecodeOferta = $(".buy");
-	var menorPrecodeOferta = $(".sell");
-	var time = $(".date");
-
-	var high = (data.ticker['high']);
-	var low = (data.ticker['low']);
-	var vol = (data.ticker['vol']);
-	var last = (data.ticker['last']);
-	var buy = (data.ticker['buy']);
-	var sell = (data.ticker['sell']);
-	var date =  obterHora();
+function pegaDadoscoinbase(data) {
+	var quantidadeNegociada = $(".volume");
+	var precoUnitario = $(".price");
+	var time = $(".time");
+// console.log(data);
+	var volume = (data['volume']);
+	var price = (data['price']);
+	var date =  (data['time']);
 	
-	maiorpreco.text(high);
-	menorPreco.text(low);
-	quantidadeNegociada.text(vol);
-	precoUnitario.text(last);
-	maiorPrecodeOferta.text(buy);
-	menorPrecodeOferta.text( sell);
-	time.text( date);
-
-	var convert = $(".date").text();
-	var timestampIn = convert*1000;
+	quantidadeNegociada.text(volume);
+	precoUnitario.text(price);
+	time.text(date);
 }
-
-function obterHora() {
-	var data = new Date();
-	var dia = data.getDate();
-	var mes = data.getMonth() + 1;
-	var ano = data.getFullYear();
-	var hora = data.getHours();
-	var minuto = data.getMinutes();
-	var informacoes = (dia+"/"+mes+"/"+ano+" "+hora+":"+minuto);
-	return informacoes;
+function pegaDolar() {
+	$.get("https://economia.awesomeapi.com.br/USD-BRL/", pegaDadosDolar)
+	.fail(function(){
+	$(".dica").text("Falha de conexão");
+});
+}
+function pegaDadosDolar(data) {
+var dolar = (data[0]['bid']);
+var price = $(".price").text();
+var usdbrl = (price * dolar);
+$(".price").text(usdbrl)
 }
 
 function SyncDados() {
 	setInterval(function(){
-	var maiorpreco = $(".high").text();
-	var menorPreco = $(".low").text();
-	var quantidadeNegociada = $(".vol").text();
-	var precoUnitario = $(".last").text();
-	var maiorPrecodeOferta = $(".buy").text();
-	var menorPrecodeOferta = $(".sell").text();
-	var time = $(".date").text();
+	var quantidadeNegociada = $(".volume").text();
+	var precoUnitario = parseInt($(".price").text());
+	var preco = (precoUnitario );
+	var time = $(".time").text();
     var placar = [];   
     var score = {
-	    high: maiorpreco,
-		low: menorPreco,
-		vol: quantidadeNegociada,
-		last: precoUnitario,
-		buy: maiorPrecodeOferta,
-		sell: menorPrecodeOferta,
+	  vol: quantidadeNegociada,
+		price: preco,
 		date: time
         }
        placar.push(score);
@@ -82,13 +60,14 @@ function SyncDados() {
    });
       },100000); 
 }
-function valorinputMercadobitcoin(){
-	resultado =  parseInt($(".last").text()) - parseInt($(".valor-compra-mercadobitcoin").val());
+function valorinput(){
+	resultado =  parseInt($(".price").text()) - parseInt($(".valor-compra-coinbase").val());
 	return resultado;
+
 };
 
-function analisaMercadobitcoin() {
-	var diferencaValor = valorinputMercadobitcoin();
+function analisa() {
+	var diferencaValor = valorinput();
 	if(diferencaValor > 100 && diferencaValor < 200){
 		$(".dica").text("ate "+diferencaValor+" reais a mais");
 		corpo.addClass("orange");
@@ -139,7 +118,7 @@ function analisaMercadobitcoin() {
 		corpo.removeClass("blue");
 		corpo.removeClass("purple");
 	}else if (diferencaValor > 600 && diferencaValor < 700){
-		console.log(precoDaCompra);
+		// console.log(precoDaCompra);
 		$(".dica").text("Ate "+diferencaValor+" reais a mais");
 		corpo.addClass("red");
 		corpo.removeClass("green");

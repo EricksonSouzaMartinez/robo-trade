@@ -3,9 +3,9 @@
     <link rel="stylesheet" type="text/css" href="css/estilo.css">
 </head>
 <body>
-    <div class="dados">
+    <div class="dados-mercadobitcoin">
     <h1>Mercadobitcoin</h1>
-    <button id="comecar">Start</button>
+    <button id="comecar-mercadobitcoin">Start</button>
 
     <ul>
         <li>
@@ -31,13 +31,37 @@
         </li>
     </ul>
     </div>
-    <div class="corpo-arquivo">
+    <div class="corpo-mercadobitcoin">
         <ul>
-            <li>VALOR QUANDO COMPROU<input class="valor-compra">
+            <li>VALOR QUANDO COMPROU<input class="valor-compra-mercadobitcoin">
                 
             <h1><li class="dica"></li></h1>
         </ul>
     </div>
+    <div class="dadoscoinbase">
+            <h1>Coinbase</h1>
+            <button id="comecar-coinbase">Start</button>
+        
+            <ul>
+                <li>
+                    Quantidade negociada nas últimas 24 horas:<span class="volume"></span>
+                </li>
+                <li>
+                    Preço de negociação: <h1><span class="price" style="color: red"></span></h1>
+                </li>
+                <li>
+                    Data e hora da informação em Era Unix:<span class="time"></span>
+                </li>
+            </ul>
+            </div>
+            <div class="corpo-coinbase">
+                <ul>
+                    <li>VALOR QUANDO COMPROU<input class="valor-compra-coinbase">
+                        
+                    <h1><li class="dica-coinbase"></li></h1>
+                </ul>
+            </div>
 </body>
 <script src="js/jquery.js"></script>
 <script src="js/mercadobitcoin.js"></script>
+<script src="js/coinbase.js"></script>
